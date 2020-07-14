@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: ECS Service
+
+Resources:
+  ECSservice:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSclusterARN
+      DeploymentController:
+        - CODE_DEPLOY
+      DesiredCount: 2
+      EnableECSManagedTags: true
+      HealthCheckGracePeriodSeconds: 30
+      LaunchType: FARGATE
+      LoadBalancers:
+        - ContainerName: String
+          ContainerPort: Integer
+          LoadBalancerName: String
+          TargetGroupArn: String
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref ECSsecurityGroup
+          Subnets:
+            - !Ref ECSsubnet1
+            - !Ref ECSsubnet2
+      PlacementConstraints:
+        - PlacementConstraint
+      PlacementStrategies:
+        - PlacementStrategy
+      PlatformVersion: String
+      PropagateTags: String
+      Role: String
+      SchedulingStrategy: String
+      ServiceName: !Ref ECSserviceName
+      ServiceRegistries:
+        - ServiceRegistry
+      Tags:
+        - Key: System
+          Value: test
+        - Key: TestKey
+          Value: testValue
+      TaskDefinition: String
+Parameters:
+  ECSclusterARN:
+    Default: arn:aws:ecs:ap-northeast-2:223139141744:cluster/AWSDC-ECL-PSS-DEV-API
+    Description: ECS Cluster ARN
+    Type: String
+  ECSsecurityGroup:
+    Default: sg-0ef5be0d54ce07907
+    Description: SecurityGroup for ECS
+    Type: String
+  ECSsubnet1:
+    Default: subnet-0344b4749d99f1718
+    Description: SecurityGroup1 for ECS
+    Type: AWS::EC2::Subnet::Id
+  ECSsubnet2:
+    Default: subnet-027472c22ca0001e9
+    Description: SecurityGroup2 for ECS
+    Type: AWS::EC2::Subnet::Id
+  ECSserviceName:
+    Default:
+    Description: ECS Service Name
+    Type: String
